@@ -1,0 +1,107 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html,body {
+  height: 100%;
+}
+
+main {
+  background-color: #444;
+  height: 100%;
+  position: relative;
+}
+
+.container {
+  background-color: #000;
+  color: #eee;
+  border: #fff 2px solid;
+  width: 80vmin;
+}
+
+.screen {
+  background-color: #2f2f2f;
+  text-align: right;
+  position: relative;
+  color: #fff;
+  padding: 0 10px;
+  height: 60px;
+}
+
+.operation {
+  /* background-color: #000; */
+  height: 33.33%;
+
+}
+
+.result {
+  height: 66.66%;
+  font-size: xx-large;
+}
+
+
+
+
+.keys {
+  position: relative;
+  width: 100%;
+}
+
+.keys div * {
+  background-color: #222;
+  text-align: center;
+  padding: 1em 0;
+  width: calc((100% - 6px)/3);
+  border: 1px solid #444 ;
+  cursor: pointer;
+  font-weight: bold;
+
+}
+
+.keys div .operator:hover{
+  background-color: darkgoldenrod;
+}
+
+.keys div .number:hover{
+  background-color: #444;
+}
+
+.keys div #eq:hover{
+  background-color: darkolivegreen;
+
+}
+
+.operators,.numbers {
+ display: flex;
+ flex-wrap: wrap;
+ margin-left: auto;
+ margin-right: auto;
+ justify-content: center;
+}
+
+.keys .operators .operator {
+  background-color: goldenrod;
+  color: #fff;
+}
+
+.keys .numbers {
+}
+
+.keys .numbers .number {
+  color: #fff;
+}
+
+
+/* helpers */
+/* center vertically & horizontally */
+.vh-center {
+  /* the container of vh-centred element should have
+  position: relative;
+  */
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
