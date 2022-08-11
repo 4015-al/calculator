@@ -74,11 +74,21 @@ function operate(arr) {
 keys.forEach((element) => {
   element.addEventListener("click", (e) => {
     let tmp = element.id;
+
     if (/^[\+\-\*\/\%]+$/.test(tmp)) {
+      // if entering operands after pressing =, continue using the last result
+      if (i==-1) i=0;
+
       ops[++i] = tmp;
       ++i;
       strOperations = "0";
     } else if (tmp != "=") {
+      // if entering numbers after pressing =, start a new operation
+      if (i==-1) {
+        strOperations = "0";
+        ops[0]=0
+        i=0;
+      }
       if (strOperations == "0") {
         strOperations = tmp;
       } else {
@@ -87,7 +97,20 @@ keys.forEach((element) => {
       ops[i] = strOperations;
     } else {
       strOperations = operate(ops);
-      i=0;
+      i=-1;
     }
+
+    console.log('ops :>> ', ops);
+    console.log('strOperations :>> ', strOperations);
+
+    display(ops,strOperations)
   });
 });
+
+function display(operations,result){
+  const operationScreen = document.querySelector("#operation")
+  const resultScreen = document.querySelector("#result")
+
+  operationScreen.textContent = operations.join('')
+  resultScreen.textContent = result
+}
