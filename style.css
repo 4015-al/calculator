@@ -40,9 +40,6 @@ main {
   font-size: xx-large;
 }
 
-
-
-
 .keys {
   position: relative;
   width: 100%;
@@ -67,9 +64,12 @@ main {
   background-color: #444;
 }
 
-.keys div #eq:hover{
+.keys div .eq{
   background-color: darkolivegreen;
+}
 
+.keys div .eq:hover{
+  background-color: olivedrab;
 }
 
 .operators,.numbers {
