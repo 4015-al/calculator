@@ -4,9 +4,8 @@ var i = 0;
 const keyNumbers = document.querySelectorAll(".dig");
 const keyOperators = document.querySelectorAll(".operator");
 const keys = document.querySelectorAll(".keys>div>*");
-console.log({ keys });
 
-var strOperations = "0";
+var strOpNumber = "0";
 let arrOperations;
 
 function operate(op, num1, num2) {
@@ -31,16 +30,22 @@ function operate(op, num1, num2) {
 }
 
 let operation = [];
+const mult_div_mod = "* / %";
+const add_sub = "+ -";
 
+// return an array containing the 1st index of given
+// operators, or -1 if they doesn't exist
 function indexOfOperator(operation, operatorsString) {
+  // transform operatorsString -> operator Array
   let operator = operatorsString.split(" ");
   let operatorIndex = [];
 
-  // return ops.indexOf("*");
-  for (let i = 0; i < operator.length; i++) {
-    let ndx = operation.indexOf(operator[i]);
+  operator.forEach((op) => {
+    let ndx = operation.indexOf(op); // -1 if it doesn't exist
+    // if the operation contains the op add its index
     if (ndx > -1) operatorIndex.push(ndx);
-  }
+  });
+
   // console.log('operatorIndex :>> ', operatorIndex);
   let res = operatorIndex.length > 0 ? Math.min(...operatorIndex) : -1;
   // console.log('res :>> ', res);
@@ -52,72 +57,91 @@ function operateAll(ops) {
   let res = ops;
   console.log("====");
 
-  const operatorsStr1 = "* / %";
-  let op1 = indexOfOperator(res, operatorsStr1);
-  const operatorsStr2 = "+ -";
-  let op2 = indexOfOperator(res, operatorsStr2);
-
+  let op1 = indexOfOperator(res, mult_div_mod);
+  let op2 = indexOfOperator(res, add_sub);
 
   while (res.length > 2 && (op1 > -1 || op2 > -1)) {
-    console.log("#"+ (initialLength - res.length)/2+" iteration");
-    console.log(`index of ${operatorsStr1.split(" ")}  :>> `, op1);
-    console.log(`index of ${operatorsStr2.split(" ")}  :>> `, op2);
+    console.log("#" + (initialLength - res.length) / 2 + " iteration");
+    console.log(`index of ${mult_div_mod.split(" ")}  :>> `, op1);
+    console.log(`index of ${add_sub.split(" ")}  :>> `, op2);
+
+    // if there is a mult_div_mod operator use it 1st, else use add_sub
     let opIndex = op1 > -1 ? op1 : op2;
     console.log("opIndex :>> ", opIndex);
+
     let op = res[opIndex];
     let n1 = res[opIndex - 1];
     let n2 = res[opIndex + 1];
     console.log("operate(op, n1, n2) :>> ", [op, n1, n2]);
+
     opResult = operate(op, n1, n2);
     console.log("opResult :>> ", opResult);
+
+    // after doing the operation, put
+    // the result of `n1 op n2` in `n1` place
     res.splice(opIndex - 1, 3, opResult);
     console.log("res :>> ", res);
 
-    op1 = indexOfOperator(res, operatorsStr1);
-    op2 = indexOfOperator(res, operatorsStr2);
+    // get the remaining operators in the operation
+    op1 = indexOfOperator(res, mult_div_mod);
+    op2 = indexOfOperator(res, add_sub);
   }
 
   console.log("====");
 }
 
-keys.forEach((element) => {
-  element.addEventListener("click", (e) => {
-    let tmp = element.id;
+keys.forEach((ClickedKey) => {
+  ClickedKey.addEventListener("click", (e) => {
+    let k = ClickedKey.id;
     let clear = false;
-    if (tmp === "C") {
+
+    if (k === "=") {
+      strOpNumber = operateAll(ops);
+      i = -1;
+    }
+    // clear
+    else if (k === "C") {
       clear = true;
-      strOperations = "0";
+      strOpNumber = "0";
       i = 0;
       display();
-    } else if (/^[\+\-\*\/\%]+$/.test(tmp)) {
-      // if entering operands after pressing =, continue using the last result
+      console.clear();
+    }
+    // operator
+    else if (/^[\+\-\*\/\%]+$/.test(k)) {
+      // if entering operators after pressing =,
+      // continue while using the last result
       if (i == -1) i = 0;
-      ops[++i] = tmp;
+      ops[++i] = k;
       ++i;
-      strOperations = "0";
-    } else if (tmp != "=") {
-      // if entering numbers after pressing =, start a new operation
+      strOpNumber = "0";
+    }
+    // digit
+    else if (/[\d]+?/.test(k)) {
+      // if entering numbers after pressing =,
+      // start a new operation
       if (i == -1) {
-        strOperations = "0";
+        strOpNumber = "0";
         ops[0] = 0;
         i = 0;
       }
-      if (strOperations == "0") {
-        strOperations = tmp;
+
+      if (strOpNumber == "0") {
+        // start a new number
+        strOpNumber = k;
       } else {
-        strOperations += tmp;
+        // append to the last one
+        strOpNumber += k;
       }
-      ops[i] = strOperations;
-    } else {
-      strOperations = operateAll(ops);
-      i = -1;
+      ops[i] = strOpNumber;
+    }
+
+    if (!clear) {
+      display(ops, strOpNumber);
     }
 
     console.log("ops :>> ", ops);
-    // console.log("strOperations :>> ", strOperations);
-    if (!clear) {
-      display(ops, strOperations);
-    }
+    console.log("strOpNumber :>> ", strOpNumber);
   });
 });
 
@@ -125,9 +149,11 @@ function display(_operations, _result) {
   const operationScreen = document.querySelector("#operation");
   const resultScreen = document.querySelector("#result");
 
-  operationScreen.textContent =
-    _operations != undefined && Array.isArray(_operations)
-      ? _operations.join("")
-      : "";
-  resultScreen.textContent = _result ? _result : "0";
+  let scOps, scRes;
+
+  scOps = arrNotEmpty(_operations) ? _operations.join("") : "";
+  scRes = arrNotEmpty(_operations) ? _operations[_operations.length - 1] : "0";
+
+  operationScreen.textContent = scOps;
+  resultScreen.textContent = scRes;
 }
