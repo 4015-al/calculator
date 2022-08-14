@@ -104,6 +104,8 @@ keys.forEach((ClickedKey) => {
       clear = true;
       strOpNumber = "0";
       i = 0;
+      ops = []
+
       display();
       console.clear();
     }
