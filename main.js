@@ -157,3 +157,14 @@ function display(_operations, _result) {
   operationScreen.textContent = scOps;
   resultScreen.textContent = scRes;
 }
+
+/**
+ * Helpers
+ *
+ * @see https://github.com/4015-dev/js-snippets
+ */
+
+// check if an element exists
+const exists = (x) => x !== undefined && x !== null;
+// check if an element exists, an array, and is not empty
+const arrNotEmpty = (arr) => exists(arr) && Array.isArray(arr) && arr.length;
