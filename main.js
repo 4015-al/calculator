@@ -135,6 +135,22 @@ keys.forEach((ClickedKey) => {
       }
       ops[i] = strOpNumber;
     }
+    // dot
+    else if (k===".") {
+      // if entering numbers after pressing =,
+      // start a new operation
+      if (i == -1) {
+        strOpNumber = "0.";
+        ops[0] = 0;
+        i = 0;
+      }
+
+      if (lastChar(strOpNumber) != ".") {
+        strOpNumber += k;
+      }
+
+      ops[i] = strOpNumber;
+    }
 
     if (!clear) {
       display(ops, strOpNumber);
@@ -168,3 +184,5 @@ function display(_operations, _result) {
 const exists = (x) => x !== undefined && x !== null;
 // check if an element exists, an array, and is not empty
 const arrNotEmpty = (arr) => exists(arr) && Array.isArray(arr) && arr.length;
+// return the last char of a str
+const lastChar = (str) => str && str.length ? str[str.length-1] : undefined;
